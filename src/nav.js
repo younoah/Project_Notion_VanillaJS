@@ -42,14 +42,30 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
       for (const child of parent) {
         const $button = document.createElement("button");
         const $child = document.createElement("li");
+        const $dropdown = document.createElement("div");
+        $dropdown.className = "drop-down";
+        $dropdown.textContent = ">";
         $child.id = child.id;
         $child.textContent = child.title;
         $button.textContent = "추가";
         $button.className = "new-child-document";
         $target.appendChild($child);
         $child.appendChild($button);
+        $child.prepend($dropdown);
         const $newTarget = document.getElementById(child.id);
-        this.showChildDocuments(child.documents, $newTarget);
+        let isDroped = false;
+        $dropdown.addEventListener("click", (e) => {
+          const $li = e.target.closest("li");
+          if (!isDroped) {
+            this.showChildDocuments(child.documents, $newTarget);
+          } else {
+            const $removes = $li.querySelectorAll("li");
+            $removes.forEach(($remove) => {
+              $li.removeChild($remove);
+            });
+          }
+          isDroped = !isDroped;
+        });
       }
     }
   };

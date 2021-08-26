@@ -47,7 +47,7 @@ export default function EditorPage({
       const title = $editorPage.querySelector(".editor-title").value;
       const content = $editorPage.querySelector(".editor-content").value;
       onSave({ title, content, id: this.state.id });
-    }, 200);
+    }, 500);
   });
   $editorPage.addEventListener("click", (e) => {
     if (e.target.id) {
