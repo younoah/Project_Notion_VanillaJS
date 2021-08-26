@@ -41,7 +41,7 @@ export async function updateDocumentById({ id, title, content }) {
   }
 }
 
-export async function createDocument() {
+export async function createDocument(parent) {
   try {
     const result = await fetch(`${API_END_POINT}/documents`, {
       method: "POST",
@@ -50,12 +50,9 @@ export async function createDocument() {
         // prettier-ignore
         "title": "새로운 파일",
         // prettier-ignore
-        "parent": null,
+        "parent": parent,
       }),
     });
-    if (result.ok) {
-      console.log(result.json());
-    }
   } catch (e) {
     alert("서버와 통신 원할하지않습니다.");
   }
@@ -63,11 +60,10 @@ export async function createDocument() {
 
 export async function deleteDocument(id) {
   try {
-    const result = await fetch(`${API_END_POINT}/documents/${id}`, {
+    await fetch(`${API_END_POINT}/documents/${id}`, {
       method: "DELETE",
       headers: { "x-username": userName },
     });
-    console.log(result.json());
   } catch (e) {
     alert("서버와 통신 원할하지않습니다.");
   }

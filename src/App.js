@@ -20,18 +20,12 @@ export default function App({ $target }) {
     onSelected: async (id) => {
       await fetchDocument(id);
     },
-    onRemove: async (id) => {
-      await deleteDocument(id);
-      await fetchNav();
-      const isCurrentPage = parseInt(id) === parseInt(editorPage.state.id);
-      console.log(isCurrentPage);
-      if (isCurrentPage) {
-        editorPage.setState();
-      }
-    },
-    onCreate: async () => {
-      await createDocument();
+    onCreate: async (id = null) => {
+      const parentDocument = this.state.find((document) => document.id == id);
+      console.log(parentDocument);
+      await createDocument(parentDocument);
       fetchNav();
+      fetchDocument(id);
     },
   });
   const editorPage = new EditorPage({
@@ -41,6 +35,20 @@ export default function App({ $target }) {
       await updateDocument({ title, content, id });
       fetchNav();
     },
+    onSelected: async (id) => {
+      await fetchDocument(id);
+    },
+    onSelected: async (id) => {
+      await fetchDocument(id);
+    },
+    onDelete: async (id) => {
+      await deleteDocument(id);
+      await fetchNav();
+      const isCurrentPage = parseInt(id) === parseInt(editorPage.state.id);
+      if (isCurrentPage) {
+        editorPage.setState(false);
+      }
+    },
   });
   const fetchNav = async () => {
     const result = await getDocuments();
@@ -49,7 +57,9 @@ export default function App({ $target }) {
   };
 
   const fetchDocument = async (id) => {
+    console.log(id);
     const result = await getDocumentById(id);
+    console.log(result);
     editorPage.setState(result);
   };
 

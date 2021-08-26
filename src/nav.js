@@ -1,10 +1,4 @@
-export default function Nav({
-  $target,
-  initialState,
-  onSelected,
-  onRemove,
-  onCreate,
-}) {
+export default function Nav({ $target, initialState, onSelected, onCreate }) {
   const $nav = document.createElement("nav");
   $target.appendChild($nav);
 
@@ -17,33 +11,36 @@ export default function Nav({
 
   this.render = () => {
     if (this.state.length === 0) {
-      $nav.innerHTML = `<button class ="new-document">새문서 추가하기</button>`;
+      $nav.innerHTML = `<button class ="new-document">+</button>`;
     }
     $nav.innerHTML = `
-    <button class ="new-document">새문서 추가하기</button>
+    <button class ="new-document">+</button>
         <ul>
         ${this.state
           .map((document) => {
-            return ` <li class="${document.id}">${document.title} <button>삭제</button></button></li>`;
+            return ` <li id="${document.id}">${document.title}<button class="new-child-document">+</button> </li>`;
           })
           .join("")}
         </ul>`;
   };
 
   $nav.addEventListener("click", (e) => {
-    const targetDocumentId = e.target.className;
-    const isButton = e.target.tagName === "BUTTON";
-    const isNewButton = e.target.className === "new-document";
-    if (isButton && !targetDocumentId) {
-      onRemove(e.target.closest("li").className);
-    }
+    const targetDocumentId = e.target.id;
+    const isNewDocumentButton = e.target.className === "new-document";
+    const isNewChildDocumentButton =
+      e.target.className === "new-child-document";
 
-    if (targetDocumentId && !isButton) {
-      onSelected(targetDocumentId);
-    }
-
-    if (isNewButton) {
+    if (isNewDocumentButton) {
       onCreate();
+      return;
+    }
+    if (isNewChildDocumentButton) {
+      onCreate(parseInt(e.target.closest("li").id));
+      return;
+    }
+
+    if (targetDocumentId) {
+      onSelected(targetDocumentId);
     }
   });
   this.render();
