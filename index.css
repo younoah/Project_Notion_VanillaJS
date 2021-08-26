@@ -1,0 +1,23 @@
+#App {
+  display: flex;
+  flex-direction: row;
+}
+
+.editorPage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editorPage > :nth-child(1) {
+  margin-top: 30px;
+  width: 80%;
+  height: 50px;
+}
+
+.editorPage > :nth-child(2) {
+  width: 80%;
+  height: 500px;
+}
