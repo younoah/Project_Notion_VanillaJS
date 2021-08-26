@@ -40,6 +40,7 @@ header에 해당 값이 누락이 되면 API 호출에 실패합니다.
 > https://kdt.roto.codes/documents - GET
 
 Response의 형태는 아래와 같습니다.
+
 ```
 [
   {
@@ -123,6 +124,7 @@ request body에 JSON 형태로 아래처럼 값을 넣어야 합니다.
 > https://kdt.roto.codes/documents/{documentId} - PUT
 
 request body에 수정할 내용을 JSON 형태로 넣으면 됩니다.
+
 ```json
 {
   "title": "제목 수정",

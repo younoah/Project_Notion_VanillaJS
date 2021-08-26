@@ -18,19 +18,25 @@ export default function EditorPage({
 
   this.render = () => {
     if (!this.state) {
-      $editorPage.innerHTML = "<div>페이지가 삭제되었습니다.</div>";
+      $editorPage.innerHTML =
+        "<div>빈 화면입니다. 왼쪽에 문서를 선택해주세요.</div>";
       return;
     }
     $editorPage.innerHTML = `
-        <button class ="delete">삭제하기</button>
+        <button class ="delete">삭제</button>
+        <div>문서번호${this.state.id}</div>
         <textarea class= "editor-title">${this.state.title}</textarea>
         <textarea class= "editor-content">${this.state.content}</textarea>
 
-        ${this.state.documents
-          .map((document) => {
-            return `<span id="${document.id}" class ="child-document">${document.title}</span>`;
-          })
-          .join("")}
+        ${
+          this.state.documents
+            ? this.state.documents
+                .map((document) => {
+                  return `<span id="${document.id}" class ="child-document">${document.title}</span>`;
+                })
+                .join("")
+            : ""
+        }
         `;
   };
   let debounce = null;
@@ -53,4 +59,5 @@ export default function EditorPage({
       onDelete(this.state.id);
     }
   });
+  this.render();
 }

@@ -7,21 +7,14 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
   this.setState = (nextState) => {
     this.state = nextState;
     this.render();
+    this.showChildDocuments(this.state);
   };
 
   this.render = () => {
-    if (this.state.length === 0) {
-      $nav.innerHTML = `<button class ="new-document">+</button>`;
-    }
-    $nav.innerHTML = `
-    <button class ="new-document">+</button>
-        <ul>
-        ${this.state
-          .map((document) => {
-            return ` <li id="${document.id}">${document.title}<button class="new-child-document">+</button> </li>`;
-          })
-          .join("")}
-        </ul>`;
+    console.log(this.state);
+    $nav.innerHTML = `<button class ="new-document">문서추가</button>
+    <ul></ul>    
+    `;
   };
 
   $nav.addEventListener("click", (e) => {
@@ -44,4 +37,20 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
     }
   });
   this.render();
+  this.showChildDocuments = (parent, $target = $nav.querySelector("ul")) => {
+    if (parent.length > 0) {
+      for (const child of parent) {
+        const $button = document.createElement("button");
+        const $child = document.createElement("li");
+        $child.id = child.id;
+        $child.textContent = child.title;
+        $button.textContent = "추가";
+        $button.className = "new-child-document";
+        $target.appendChild($child);
+        $child.appendChild($button);
+        const $newTarget = document.getElementById(child.id);
+        this.showChildDocuments(child.documents, $newTarget);
+      }
+    }
+  };
 }

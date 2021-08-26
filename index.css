@@ -2,7 +2,9 @@
   display: flex;
   flex-direction: row;
 }
-
+li {
+  position: relative;
+}
 .editorPage {
   width: 100%;
   display: flex;
@@ -12,15 +14,19 @@
 }
 .editorPage > :nth-child(1) {
   width: 50px;
-  height: 50px;
+  height: 20px;
 }
 .editorPage > :nth-child(2) {
   margin-top: 30px;
+}
+
+.editorPage > :nth-child(3) {
+  margin-top: 10px;
   width: 80%;
   height: 50px;
 }
 
-.editorPage > :nth-child(3) {
+.editorPage > :nth-child(4) {
   width: 80%;
   height: 500px;
 }

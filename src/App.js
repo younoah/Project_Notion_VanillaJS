@@ -8,6 +8,11 @@ import {
 } from "./api.js";
 import EditorPage from "./editorPage.js";
 export default function App({ $target }) {
+  const onSelected = async (id) => {
+    history.pushState(null, null, id);
+    await fetchDocument();
+  };
+
   this.state = [];
 
   this.setState = (nextState) => {
@@ -17,11 +22,9 @@ export default function App({ $target }) {
   const nav = new Nav({
     $target,
     initialState: this.state,
-    onSelected: async (id) => {
-      await fetchDocument(id);
-    },
+    onSelected,
     onCreate: async (id = null) => {
-      const parentDocument = this.state.find((document) => document.id == id);
+      const parentDocument = await getDocumentById(id);
       console.log(parentDocument);
       await createDocument(parentDocument);
       fetchNav();
@@ -35,19 +38,12 @@ export default function App({ $target }) {
       await updateDocument({ title, content, id });
       fetchNav();
     },
-    onSelected: async (id) => {
-      await fetchDocument(id);
-    },
-    onSelected: async (id) => {
-      await fetchDocument(id);
-    },
+    onSelected: onSelected,
     onDelete: async (id) => {
       await deleteDocument(id);
+      history.back();
       await fetchNav();
-      const isCurrentPage = parseInt(id) === parseInt(editorPage.state.id);
-      if (isCurrentPage) {
-        editorPage.setState(false);
-      }
+      fetchDocument();
     },
   });
   const fetchNav = async () => {
@@ -56,15 +52,25 @@ export default function App({ $target }) {
     return result;
   };
 
-  const fetchDocument = async (id) => {
-    console.log(id);
-    const result = await getDocumentById(id);
-    console.log(result);
-    editorPage.setState(result);
+  const fetchDocument = async () => {
+    const id = window.location.pathname.substr(1);
+    if (id.length > 0) {
+      const result = await getDocumentById(id);
+      editorPage.setState(result);
+    } else {
+      editorPage.setState(null);
+    }
   };
 
   const updateDocument = async ({ id, title, content }) => {
     await updateDocumentById({ id, title, content });
   };
   fetchNav();
+
+  window.addEventListener("popstate", () => {
+    fetchDocument();
+  });
+  window.addEventListener("load", () => {
+    fetchDocument();
+  });
 }
