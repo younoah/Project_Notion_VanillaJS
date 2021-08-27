@@ -28,7 +28,7 @@ export default function App({ $target }) {
       console.log(parentDocument);
       await createDocument(parentDocument);
       fetchNav();
-      fetchDocument(id);
+      fetchDocument();
     },
   });
   const editorPage = new EditorPage({
@@ -41,9 +41,9 @@ export default function App({ $target }) {
     onSelected: onSelected,
     onDelete: async (id) => {
       await deleteDocument(id);
-      history.back();
-      await fetchNav();
+      history.replaceState(null, null, "/");
       fetchDocument();
+      fetchNav();
     },
   });
   const fetchNav = async () => {

@@ -2,12 +2,27 @@
   display: flex;
   flex-direction: row;
 }
+nav {
+  background-color: rgb(247, 246, 243);
+  width: 20%;
+}
 nav > ul > li {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-justify: auto;
+}
+
+nav > ul > li > button {
+  width: 30px;
+  height: 30px;
+}
+nav > ul {
   display: flex;
   flex-direction: column;
 }
 .editorPage {
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,4 +45,8 @@ nav > ul > li {
 .editorPage > :nth-child(4) {
   width: 80%;
   height: 500px;
+}
+
+.onSlected {
+  background-color: rgb(217, 216, 213);
 }
