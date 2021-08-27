@@ -17,6 +17,7 @@ nav {
 }
 
 nav > ul {
+  margin-left: -60px;
   display: flex;
   flex-direction: column;
 }
