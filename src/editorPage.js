@@ -18,8 +18,7 @@ export default function EditorPage({
 
   this.render = () => {
     if (!this.state) {
-      $editorPage.innerHTML =
-        "<div>빈 화면입니다. 왼쪽에 문서를 선택해주세요.</div>";
+      $editorPage.innerHTML = `<div calss="editor-empty-page">왼쪽에서 문서를 선택해주세요.</div>`;
       return;
     }
     $editorPage.innerHTML = `

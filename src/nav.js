@@ -10,7 +10,6 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
   };
 
   this.render = () => {
-    console.log(this.state);
     $nav.innerHTML = `<button class ="new-document">문서추가</button>
     <ul>${this.state
       .map((document) => {

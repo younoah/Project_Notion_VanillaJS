@@ -24,10 +24,17 @@ export default function App({ $target }) {
     initialState: this.state,
     onSelected,
     onCreate: async (id = null) => {
-      const parentDocument = await getDocumentById(id);
-      console.log(parentDocument);
-      await createDocument(parentDocument);
-      fetchNav();
+      if (id) {
+        // 부모문서가 있는 경우
+        const parentDocument = await getDocumentById(id);
+        await createDocument(parentDocument);
+      } else {
+        // 루트에 생성할 경우
+        await createDocument();
+        const documents = await fetchNav();
+        const newDocument = documents[documents.length - 1];
+        history.pushState(null, null, newDocument.id);
+      }
       fetchDocument();
     },
   });
