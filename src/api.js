@@ -41,14 +41,16 @@ export async function updateDocumentById({ id, title, content }) {
   }
 }
 
-export async function createDocument(parent) {
+export async function createDocument(parent = null) {
   try {
+    let title = "새로운파일";
+    if (parent) title = `${parent.title}의 하위 문서`;
     const result = await fetch(`${API_END_POINT}/documents`, {
       method: "POST",
       headers: { "x-username": userName, "Content-Type": "application/json" },
       body: JSON.stringify({
         // prettier-ignore
-        "title": "새로운 파일",
+        "title": title,
         // prettier-ignore
         "parent": parent,
       }),
