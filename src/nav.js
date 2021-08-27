@@ -1,4 +1,10 @@
-export default function Nav({ $target, initialState, onSelected, onCreate }) {
+export default function Nav({
+  $target,
+  initialState,
+  onSelected,
+  onCreate,
+  onRemove,
+}) {
   const $nav = document.createElement("nav");
   $target.appendChild($nav);
 
@@ -20,12 +26,16 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
     ) => {
       for (const child of documents) {
         const ul = document.createElement("ul");
-        const button = document.createElement("button");
-        button.className = "new-child-document";
-        button.textContent = "+";
+        const addButton = document.createElement("button");
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-document";
+        deleteButton.textContent = "X";
+        addButton.className = "new-child-document";
+        addButton.textContent = "+";
         ul.textContent = child.title;
         ul.id = child.id;
-        ul.appendChild(button);
+        ul.prepend(addButton);
+        ul.appendChild(deleteButton);
         $parent.appendChild(ul);
         if (child.documents.length > 0)
           this.showChildDocuments(child.documents, ul);
@@ -39,10 +49,15 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
   $nav.addEventListener("click", (e) => {
     event.stopPropagation(e.target);
     const targetDocumentId = e.target.id;
+    const isDeletebutton = e.target.className === "delete-document";
     const isNewDocumentButton = e.target.className === "new-document";
     const isNewChildDocumentButton =
       e.target.className === "new-child-document";
 
+    if (isDeletebutton) {
+      onRemove(parseInt(e.target.closest("ul").id));
+      return;
+    }
     if (isNewDocumentButton) {
       onCreate();
       return;
@@ -57,15 +72,3 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
     }
   });
 }
-
-/*
-
-<ul>
-<li> 말단 문서</li>
-<li>  <div>부모 문서</div>
-<ul>
-
-</ul>
-</li>
-</ul>
- */

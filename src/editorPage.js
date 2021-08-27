@@ -2,7 +2,7 @@ export default function EditorPage({
   $target,
   ininialState,
   onSave,
-  onDelete,
+  onRemove,
   onSelected,
 }) {
   const $editorPage = document.createElement("div");
@@ -60,7 +60,7 @@ export default function EditorPage({
     }
     const isDeleteButton = e.target.className === "delete";
     if (isDeleteButton) {
-      onDelete(this.state.id);
+      onRemove(this.state.id);
     }
   });
   this.render();
