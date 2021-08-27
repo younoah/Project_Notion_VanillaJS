@@ -6,136 +6,74 @@
 
 기본적인 레이아웃은 노션과 같으며, 스타일링, 컬러값 등은 원하는대로 커스텀합니다.
 
-- 글 단위를 Document라고 합니다. Document는 Document 여러개를 포함할 수 있습니다. o
-- 화면 좌측에 Root Documents를 불러오는 API를 통해 루트 Documents를 렌더링합니다. o
-  - Root Document를 클릭하면 오른쪽 편집기 영역에 해당 Document의 Content를 렌더링합니다. o
-  - 해당 Root Document에 하위 Document가 있는 경우, 해당 Document 아래에 트리 형태로 렌더링 합니다. o
-  - Document Tree에서 각 Document 우측에는 + 버튼이 있습니다. 해당 버튼을 클릭하면, 클릭한 Document의 하위 Document로 새 Document를 생성하고 편집화면으로 넘깁니다. o
-- 편집기에는 기본적으로 저장 버튼이 없습니다. Document Save API를 이용해 지속적으로 서버에 저장되도록 합니다. o
-- History API를 이용해 SPA 형태로 만듭니다. o
-  - 루트 URL 접속 시엔 별다른 편집기 선택이 안 된 상태입니다. o
-  - /documents/{documentId} 로 접속시, 해당 Document 의 content를 불러와 편집기에 로딩합니다. o
+- [x] 글 단위를 Document라고 합니다. Document는 Document 여러개를 포함할 수 있습니다.
+- [x] 화면 좌측에 Root Documents를 불러오는 API를 통해 루트 Documents를 렌더링합니다.
+  - [x] Root Document를 클릭하면 오른쪽 편집기 영역에 해당 Document의 Content를 렌더링합니다.
+  - [x] 해당 Root Document에 하위 Document가 있는 경우, 해당 Document 아래에 트리 형태로 렌더링 합니다.
+  - [x] Document Tree에서 각 Document 우측에는 + 버튼이 있습니다. 해당 버튼을 클릭하면, 클릭한 Document의 하위 Document로 새 Document를 생성하고 편집화면으로 넘깁니다.
+- [x] 편집기에는 기본적으로 저장 버튼이 없습니다. Document Save API를 이용해 지속적으로 서버에 저장되도록 합니다.
+- [x] History API를 이용해 SPA 형태로 만듭니다.
+  - [x] 루트 URL 접속 시엔 별다른 편집기 선택이 안 된 상태입니다.
+  - [x] /documents/{documentId} 로 접속시, 해당 Document 의 content를 불러와 편집기에 로딩합니다.
 
 ## 보너스 요구사항
 
 - 기본적으로 편집기는 textarea 기반으로 단순한 텍스트 편집기로 시작하되, 여력이 되면 div와 contentEditable을 조합해서 좀 더 Rich한 에디터를 만들어봅니다.
-- 편집기 최하단에는 현재 편집 중인 Document의 하위 Document 링크를 렌더링하도록 추가합니다. o
+- [x] 편집기 최하단에는 현재 편집 중인 Document의 하위 Document 링크를 렌더링하도록 추가합니다.
 - 편집기 내에서 다른 Document name을 적은 경우, 자동으로 해당 Document의 편집 페이지로 이동하는 링크를 거는 기능을 추가합니다.
 - 그외 개선하거나 구현했으면 좋겠다는 부분이 있으면 적극적으로 구현해봅니다!
 
-## API 사용법
+# 구동 화면
 
-기본적으로 모든 API에는 headers에 아래의 값을 넣어야 합니다.
+### 초기화면
 
-```
-' -username': '다른 사람과 겹치지 않는 고유한 이름'
-```
+![](https://images.velog.io/images/alajillo/post/e32430b6-f4c6-4ad3-93ed-6caba4d63043/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.08.56.png)
 
-header에 해당 값이 누락이 되면 API 호출에 실패합니다.
+- 초기화면은 왼쪽에 현재 서버에 있는 문서들을 로딩
 
-### Root Documents 가져오기
+### 새문서 추가하기
 
-전체 Document의 구조를 트리 형태로 가져옵니다.
+![](https://images.velog.io/images/alajillo/post/56d5359e-d0ad-40a6-b13a-b37946a6495e/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.09.03.png)
 
-> https://kdt.roto.codes/documents - GET
+- 새 문서를 추가할 클릭할 경우 url주소가 변경(historyAPI 사용)
+- url이 변경되면 자동으로 오른쪽 편집기에 해당 문서가 로딩
 
-Response의 형태는 아래와 같습니다.
+### 하위 문서 추가
 
-```
-[
-  {
-    "id": 1, // Document id
-    "title": "노션을 만들자", // Document title
-    "documents": [
-      {
-        "id": 2,
-        "title": "블라블라",
-        "documents": [
-          {
-            "id": 3,
-            "title": "함냐함냐",
-            "documents": []
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "title": "hello!",
-    "documents": []
-  }
-]
-```
+![](https://images.velog.io/images/alajillo/post/7fc919f2-836c-4356-b90a-ddc35a45be7a/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.09.13.png)
 
-### 특정 Document의 content 조회하기
+- 문서 오른쪽에 붙어있는 +버튼을 누르면 해당 문서의 하위 문서로 추가되면서 url가 동일하게 변경되고 오른쪽 편집기에 로딩된다.
 
-> https://kdt.roto.codes/documents/{documentId} - GET
+### 왼쪽 네비게이션 화면에서 문서 클릭
 
-Response의 형태는 아래와 같습니다.
+![](https://images.velog.io/images/alajillo/post/5ea8a96d-4992-4f55-bf4f-0b6219be3791/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.09.18.png)
 
-```
-{
-  "id": 1,
-  "title": "노션을 만들자",
-  "content": "즐거운 자바스크립트의 세계!",
-  "documents": [
-    {
-      "id": 2,
-      "title": "",
-      "createdAt": "",
-      "updatedAt": ""
-    }
-  ],
-  "createdAt": "",
-  "updatedAt": ""
-}
-```
+- 왼쪽 네비게이션 화면에서 문서를 클릭할 경우 url이 변경되면서 편집기에 로딩
+- 편집기 밑에는 해당 문서의 하위 문서들이 표기
+- 편집기 밑에 있는 문서목록을 클릭했을때 해당 문서가 편집기에 로딩된
 
-### Document 생성하기
+### 문서 편집
 
-> https://kdt.roto.codes/documents - POST
+![](https://images.velog.io/images/alajillo/post/40e02267-cd59-4e03-b5f5-b883d16b19de/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.09.34.png)
 
-request body에 JSON 형태로 아래처럼 값을 넣어야 합니다.
+- 편집기에서 제목과 내용을 수정할 경우 debounce를 이용하여 0.5초간 입력이 없을시에 자동업데이트
+- 왼쪽 네비게이션에서도 동일하게 업데이트
 
-```json
-{
-  "title": "문서 제목",
-  // parent가 null이면 루트 Document가 됩니다.
-  // 특정 Document에 속하게 하려면 parent에
-  // 해당 Document id를 넣으세요.
-  "parent": null
-}
-```
+### 하위 문서 제목 초기화
 
-생성에 성공하면 reponse에 아래처럼 생성된 결과를 내려줍니다.
+![](https://images.velog.io/images/alajillo/post/31918b9e-5ea2-4d5a-80c2-98d2a462fce3/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.09.39.png)
 
-```json
-{
-  "id": 6,
-  "title": "문서 제목",
-  "createdAt": "생성된 날짜",
-  "updatedAt": "수정된 날짜"
-}
-```
+- 하위 문서를 생성할때 자동적으로 `${상위문서의제목}의 하위문서`라는 이름으로 초기화
 
-### 특정 Document 수정하기
+### 문서의 삭제
 
-> https://kdt.roto.codes/documents/{documentId} - PUT
+![](https://images.velog.io/images/alajillo/post/e3e1723f-b96d-4ba8-bb11-18b8a4fc979b/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.10.25.png)
 
-request body에 수정할 내용을 JSON 형태로 넣으면 됩니다.
+- 문서의 삭제는 편집기 상단에 삭제버튼과 네비게이션 문서 왼쪽에 x버튼을 이용해서 삭제
+- 만약 삭제하려는 문서의 하위 문서가 존재한다면 한번더 확인
 
-```json
-{
-  "title": "제목 수정",
-  "content": "내용 수정"
-}
-```
+### 트리뷰 구현
 
-### 특정 Document 삭제하기
+![](https://images.velog.io/images/alajillo/post/5d1c4d22-503f-4c09-82b8-7c5b6254e360/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202021-08-27%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%206.10.50.png)
 
-> https://kdt.roto.codes/documents/{documentId} - DELETE
-
-documentId에 해당하는 Document를 삭제합니다.
-
-만약 하위 documents가 있는 document를 삭제한 경우, 하위 documents 등은 상위 document가 없어지므로 root document로 인식됩니다.
+- ul태그를 이용해서 상위문서와 하위문서의 관계를 트리뷰로 구현

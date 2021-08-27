@@ -58,6 +58,10 @@ nav * {
 
 .child-documents-container > * {
   margin: 5px 10px;
+  background-color: tomato;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
 }
 
 button.new-document {
