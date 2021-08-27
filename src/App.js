@@ -11,6 +11,14 @@ export default function App({ $target }) {
   const onRemove = async (id) => {
     const currentPage = window.location.pathname.substr(1);
     const isCurrentPageDeleted = parseInt(currentPage) === id;
+    const willRemoveDocument = await getDocumentById(id);
+    const isHaveChild = willRemoveDocument.documents.length;
+    console.log(isHaveChild);
+    if (isHaveChild) {
+      if (!confirm("하위 문서가 존재하는 문서입니다. 삭제하시겠습니까?")) {
+        return;
+      }
+    }
     if (isCurrentPageDeleted) {
       history.replaceState(null, null, "/");
     }

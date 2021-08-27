@@ -3,30 +3,26 @@
   display: flex;
   flex-direction: row;
 }
+
+button {
+  color: white;
+  background-color: tomato;
+  border-radius: 5px;
+  border: none;
+}
 nav {
   background-color: rgb(247, 246, 243);
   width: 70vh;
   height: 100vh;
 }
-nav > ul > li {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 
-.editor-empty-page {
-  background-color: aqua;
-  width: 100vh;
-  height: 100vh;
-}
-
-nav > ul > li > button {
-  width: 30px;
-  height: 30px;
-}
 nav > ul {
   display: flex;
   flex-direction: column;
+}
+
+nav * {
+  margin-top: 2px;
 }
 .editorPage {
   width: 100vh;

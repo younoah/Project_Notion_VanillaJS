@@ -34,8 +34,8 @@ export default function Nav({
         addButton.textContent = "+";
         ul.textContent = child.title;
         ul.id = child.id;
-        ul.prepend(addButton);
-        ul.appendChild(deleteButton);
+        ul.append(addButton);
+        ul.prepend(deleteButton);
         $parent.appendChild(ul);
         if (child.documents.length > 0)
           this.showChildDocuments(child.documents, ul);
