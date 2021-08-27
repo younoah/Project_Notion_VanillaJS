@@ -20,6 +20,8 @@ export async function getDocumentById(id) {
     });
     if (result.ok) {
       return result.json();
+    } else {
+      return false;
     }
   } catch (e) {
     alert("서버와 통신 원할하지않습니다.");

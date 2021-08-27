@@ -60,6 +60,9 @@ export default function App({ $target }) {
     const id = window.location.pathname.substr(1);
     if (id.length > 0) {
       const result = await getDocumentById(id);
+      if (!result) {
+        history.replaceState(null, null, "/");
+      }
       editorPage.setState(result);
     } else {
       editorPage.setState(null);
