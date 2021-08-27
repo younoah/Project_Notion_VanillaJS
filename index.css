@@ -1,10 +1,11 @@
 #App {
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
 nav {
   background-color: rgb(247, 246, 243);
-  width: 20vh;
+  width: 50vh;
   height: 100vh;
 }
 nav > ul > li {
@@ -15,6 +16,7 @@ nav > ul > li {
 }
 
 .editor-empty-page {
+  background-color: aqua;
   width: 100vh;
   height: 100vh;
 }
@@ -28,32 +30,40 @@ nav > ul {
   flex-direction: column;
 }
 .editorPage {
-  width: 80vh;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-}
-.editorPage > :nth-child(1) {
-  width: 50px;
-  height: 20px;
-}
-.editorPage > :nth-child(2) {
-  margin-top: 30px;
+  justify-content: flex-start;
+  border: none;
 }
 
-.editorPage > :nth-child(3) {
-  margin-top: 10px;
-  width: 80%;
-  height: 50px;
+.editorPage > * {
+  margin: 10px 10px;
 }
-
-.editorPage > :nth-child(4) {
-  width: 80%;
-  height: 500px;
+.editor-title {
+  width: 80vh;
+  margin-bottom: 20px;
+  border: none;
 }
-
+.editor-content {
+  width: 80vh;
+  height: 60vh;
+  border: none;
+}
 .onSlected {
   background-color: rgb(217, 216, 213);
+}
+
+.child-documents-container {
+  width: 80vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.child-documents-container > * {
+  margin: 5px 10px;
 }

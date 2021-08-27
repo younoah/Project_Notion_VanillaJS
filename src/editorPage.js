@@ -26,16 +26,21 @@ export default function EditorPage({
         <div>문서번호${this.state.id}</div>
         <textarea class= "editor-title">${this.state.title}</textarea>
         <textarea class= "editor-content">${this.state.content}</textarea>
+        <div class="child-documents-container"></div>
+`;
+    const childContainer = document.querySelector(".child-documents-container");
 
-        ${
-          this.state.documents
-            ? this.state.documents
-                .map((document) => {
-                  return `<span id="${document.id}" class ="child-document">${document.title}</span>`;
-                })
-                .join("")
-            : ""
-        }
+    childContainer.innerHTML = `
+        
+          ${
+            this.state.documents
+              ? this.state.documents
+                  .map((document) => {
+                    return `<span id="${document.id}" class ="child-document">${document.title}</span>`;
+                  })
+                  .join("")
+              : ""
+          }
         `;
   };
   let debounce = null;

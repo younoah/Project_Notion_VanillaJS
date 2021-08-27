@@ -28,6 +28,11 @@ export default function App({ $target }) {
         // 부모문서가 있는 경우
         const parentDocument = await getDocumentById(id);
         await createDocument(parentDocument);
+        const newParentDocument = await getDocumentById(id);
+        const newChild =
+          newParentDocument.documents[newParentDocument.documents.length - 1];
+        console.log(newChild);
+        history.pushState(null, null, newChild.id);
       } else {
         // 루트에 생성할 경우
         await createDocument();
@@ -35,6 +40,7 @@ export default function App({ $target }) {
         const newDocument = documents[documents.length - 1];
         history.pushState(null, null, newDocument.id);
       }
+      fetchNav();
       fetchDocument();
     },
   });

@@ -8,15 +8,32 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
     this.state = nextState;
     this.render();
   };
-
   this.render = () => {
-    $nav.innerHTML = `<button class ="new-document">문서추가</button>
-    <ul>${this.state
-      .map((document) => {
-        return `<li id ="${document.id}">${document.title}<button class ="new-child-document">+</button></li>`;
-      })
-      .join("")}</ul>    
-    `;
+    $nav.innerHTML = `<ul class ="document-container"></ul>`;
+    const $documentContainer = $nav.querySelector(".document-container");
+    const addDocument = document.createElement("button");
+    addDocument.className = "new-document";
+    addDocument.textContent = "새문서 추가하기";
+    this.showChildDocuments = (
+      documents = this.state,
+      $parent = $documentContainer
+    ) => {
+      for (const child of documents) {
+        const ul = document.createElement("ul");
+        const button = document.createElement("button");
+        button.className = "new-child-document";
+        button.textContent = "+";
+        ul.textContent = child.title;
+        ul.id = child.id;
+        ul.appendChild(button);
+        $parent.appendChild(ul);
+        if (child.documents.length > 0)
+          this.showChildDocuments(child.documents, ul);
+      }
+    };
+    this.showChildDocuments();
+
+    $documentContainer.appendChild(addDocument);
   };
 
   $nav.addEventListener("click", (e) => {
@@ -31,7 +48,7 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
       return;
     }
     if (isNewChildDocumentButton) {
-      onCreate(parseInt(e.target.closest("li").id));
+      onCreate(parseInt(e.target.closest("ul").id));
       return;
     }
 
@@ -39,5 +56,16 @@ export default function Nav({ $target, initialState, onSelected, onCreate }) {
       onSelected(targetDocumentId);
     }
   });
-  this.render();
 }
+
+/*
+
+<ul>
+<li> 말단 문서</li>
+<li>  <div>부모 문서</div>
+<ul>
+
+</ul>
+</li>
+</ul>
+ */
