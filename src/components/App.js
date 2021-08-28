@@ -1,3 +1,4 @@
+import Editor from './Editor/index.js'
 import Sidebar from './Sidebar/index.js'
 
 export default function App({ $target }) {
@@ -29,5 +30,9 @@ export default function App({ $target }) {
   new Sidebar({
     $target,
     initialState: DUMMY_DATA,
+  })
+
+  new Editor({
+    $target,
   })
 }
