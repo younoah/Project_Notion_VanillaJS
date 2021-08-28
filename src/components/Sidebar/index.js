@@ -1,4 +1,6 @@
-import { request } from '../../utils/api.js'
+import { requestGET, requestPOST } from '../../utils/api.js'
+
+const ADD_BUTTON_CLASS_NAME = 'Sidebar__add_button'
 export default function Sidebar({ $target, initialState }) {
   // TODO: initialState Type cecheking, call without new Operator validator
   const $sidebar = document.createElement('div')
@@ -29,12 +31,47 @@ export default function Sidebar({ $target, initialState }) {
   }
 
   this.render = () => {
-    $sidebar.innerHTML = renderDocuments(this.state)
+    $sidebar.innerHTML = `
+      <button class="${ADD_BUTTON_CLASS_NAME}" type="button">루트 도큐먼트 추가</button>
+      ${renderDocuments(this.state)}
+    `
+  }
+
+  const onAddRootDocument = async () => {
+    history.pushState(null, null, '/documents/new')
+
+    const title = 'Untitled'
+    // 일단 낙관적으로 업데이트하고
+    const nextState = [...this.state, { id: 'new', title, documents: [] }]
+    this.setState(nextState)
+
+    // 사용자가 아무것도 안하면 그냥 안해주고 싶긴한데.. 일단 생성해봅시다..
+    const createdDocument = await requestPOST('/documents', {
+      title,
+      parent: null,
+    })
+
+    console.log(createdDocument)
+
+    await fetchDoucmentsData()
+  }
+
+  const fetchDoucmentsData = async () => {
+    const documentsData = await requestGET('/documents')
+    this.setState(documentsData)
   }
 
   this.init = async () => {
-    const initialState = await request('/documents')
-    this.setState(initialState)
+    $sidebar.addEventListener('click', (e) => {
+      const { className } = e.target
+      if (className) {
+        if (className === ADD_BUTTON_CLASS_NAME) {
+          onAddRootDocument()
+        }
+      }
+    })
+
+    fetchDoucmentsData()
   }
 
   this.init()
