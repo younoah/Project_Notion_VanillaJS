@@ -1,4 +1,5 @@
 import Nav from './components/Nav.js';
+import Editor from './components/Editor.js';
 
 const DUMMY_DATA = [
 	{
@@ -15,11 +16,11 @@ const DUMMY_DATA = [
 						documents: [],
 					},
 					{
-						id: 4,
+						id: 5,
 						title: '뎁스 테스트',
 						documents: [
 							{
-								id: 5,
+								id: 6,
 								title: '완벽한 트리~',
 								documents: [],
 							},
@@ -37,8 +38,29 @@ const DUMMY_DATA = [
 ];
 
 export default function App($target) {
-	new Nav({
+	const initialState = DUMMY_DATA;
+
+	this.state = initialState;
+	this.setState = nextState => {
+		this.state = initialState;
+	};
+
+	const nav = new Nav({
 		$target,
-		initialData: DUMMY_DATA,
+		initialState,
+		onClick: id => {
+			const prevItem = document.querySelector('.selected');
+			const currentItem = document.querySelector(`[data-id="${id}"]`);
+
+			if (prevItem) {
+				prevItem.classList.remove('selected');
+			}
+			currentItem.classList.add('selected');
+		},
+	});
+
+	const editor = new Editor({
+		$target,
+		initialState,
 	});
 }
