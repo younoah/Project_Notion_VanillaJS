@@ -4,7 +4,10 @@ import SidePage from "./SidePanel/SidePage.js";
 
 export default function App({ $target }) {
   const sidePage = new SidePage({ $target });
-  const mainPage = new MainPage({ $target });
+  const mainPage = new MainPage({
+    $target,
+    init: [],
+  });
 
   this.route = () => {
     // $target.innerHTML = ``;
@@ -13,7 +16,8 @@ export default function App({ $target }) {
       // sidePage.setState();
     } else if (pathname.indexOf("/documents/") === 0) {
       const [, , documentId] = pathname.split("/");
-      console.log(documentId);
+      // console.log(documentId);
+      mainPage.setState({ documentId });
     }
   };
 

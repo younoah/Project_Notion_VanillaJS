@@ -1,5 +1,4 @@
-import { request } from "../api.js";
-
+import { push } from "../router.js";
 export default function DocumentList({
   $target,
   init = [],
@@ -11,17 +10,15 @@ export default function DocumentList({
   $target.appendChild($documentList);
 
   // 재귀를 활용한 노션 리스트
-  const renderDocuments = (parentsDocuments, textIndent = 0) => {
+  const renderDocuments = (parentsDocuments) => {
     return parentsDocuments
       .map(
         ({ id, title, documents }) =>
-          `<li class='document-item' styled='text-indent=${textIndent}em;'data-state="folded" data-id="${id}">${title}
+          `<li class='document-item' data-state="folded" data-id="${id}">${title}
           ${
-            documents.length > 0
-              ? `<ul>${renderDocuments(documents, (textIndent += 2))}</ul>`
-              : ""
+            documents.length > 0 ? `<ul>${renderDocuments(documents)}</ul>` : ""
           }
-        </blockquote>`
+      `
       )
       .join("");
   };
@@ -42,7 +39,9 @@ export default function DocumentList({
   $documentList.addEventListener("click", async (e) => {
     const $li = e.target.closest(".document-item");
     if ($li) {
-      // const { id } = $li.dataset;
+      const { id } = $li.dataset;
+      // console.log(id);
+      push(`/documents/${id}`);
       // const $childDocumentList = document.createElement("ul");
       // const childDocument = await request(`/documents/${id}`);
       // console.log(childDocument);
@@ -52,7 +51,7 @@ export default function DocumentList({
       //     .join("")}
       // `;
       // $li.appendChild($childDocumentList);
-      onSelect($li);
+      // onSelect($li);
     }
   });
 
