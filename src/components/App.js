@@ -1,9 +1,19 @@
-import { requestGET, requestPOST } from '../utils/api.js'
+import { requestDELETE, requestGET, requestPOST } from '../utils/api.js'
 import Editor from './Editor/index.js'
 import Sidebar from './Sidebar/index.js'
 
+/*
+{
+  documents: Array,
+  selectedDocumentId: number,
+  title: string,
+  content: string
+}
+*/
+
 export default function App({ $target }) {
   this.state = {
+    documents: [],
     selectedDocumentId: null,
     title: '',
     content: '',
@@ -11,7 +21,11 @@ export default function App({ $target }) {
 
   this.setState = (nextState) => {
     this.state = nextState
-    const { selectedDocumentId, title, content } = this.state
+
+    const { documents, selectedDocumentId, title, content } = this.state
+
+    sidebar.setState(documents)
+
     editor.setState({
       title,
       content,
@@ -19,15 +33,16 @@ export default function App({ $target }) {
     })
   }
 
-  new Sidebar({
+  const sidebar = new Sidebar({
     $target,
-    initialState: [],
+    initialState: this.state.documents,
     onDocumentClick: async (selectedDocumentId) => {
       const selectedDocument = await requestGET(
         `/documents/${selectedDocumentId}`,
       )
 
       this.setState({
+        ...this.state,
         selectedDocumentId,
         title: selectedDocument.title,
         content: selectedDocument.content,
@@ -38,12 +53,21 @@ export default function App({ $target }) {
 
       const createdDocument = await requestPOST('/documents', document)
 
-      history.replaceState(null, null, `/documents/${createdDocument.id}`)
-
       this.setState({
         ...this.state,
         selectedDocumentId: createdDocument.id,
+        title: createdDocument.title,
+        content: createdDocument.content,
       })
+
+      history.replaceState(null, null, `/documents/${createdDocument.id}`)
+
+      await fetchDocuments()
+    },
+    onDeleteDocument: async (id) => {
+      await requestDELETE(`/documents/${id}`)
+
+      await fetchDocuments()
     },
   })
 
@@ -56,13 +80,26 @@ export default function App({ $target }) {
     },
   })
 
-  const init = () => {
+  const fetchDocuments = async () => {
+    const documents = await requestGET('/documents')
+    this.setState({
+      ...this.state,
+      documents,
+    })
+  }
+
+  const init = async () => {
     const { pathname } = location
     const [, , selectedDocumentId] = pathname.split('/')
 
     if (selectedDocumentId) {
-      this.setState({ selectedDocumentId })
+      this.setState({
+        ...this.state,
+        selectedDocumentId,
+      })
     }
+
+    await fetchDocuments()
   }
 
   init()

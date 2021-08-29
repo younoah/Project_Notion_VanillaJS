@@ -1,4 +1,4 @@
-import { requestGET, requestPATCH } from '../../utils/api.js'
+import { requestGET, requestPUT } from '../../utils/api.js'
 
 const EDITOR_NAMES = {
   TITLE: 'title',
@@ -44,7 +44,7 @@ export default function Editor({ $target, initialState }) {
         }
 
         const { selectedDocumentId, title, content } = this.state
-        await requestPATCH(`/documents/${selectedDocumentId}`, {
+        await requestPUT(`/documents/${selectedDocumentId}`, {
           title,
           content,
         })

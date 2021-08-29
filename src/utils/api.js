@@ -30,10 +30,17 @@ export const requestPOST = (url, body, options = {}) => {
   })
 }
 
-export const requestPATCH = (url, body, options = {}) => {
+export const requestPUT = (url, body, options = {}) => {
   return request(url, {
     method: 'PUT',
     body: JSON.stringify(body),
+    ...options,
+  })
+}
+
+export const requestDELETE = (url, options = {}) => {
+  return request(url, {
+    method: 'DELETE',
     ...options,
   })
 }
