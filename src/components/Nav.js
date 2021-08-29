@@ -8,7 +8,7 @@ export default function Nav({ $target, initialState, onClick }) {
 		this.render();
 	};
 
-	this.drawNav = (target, state) => {
+	this.drawTree = (target, state) => {
 		const $ul = document.createElement('ul');
 
 		state.forEach((item, index) => {
@@ -16,15 +16,18 @@ export default function Nav({ $target, initialState, onClick }) {
 			const $li = document.createElement('li');
 			const $span = document.createElement('span');
 
-			if (id === this.state.currentDocument['id']) {
-				$span.classList.add('selected');
-			}
-			$span.setAttribute('data-id', id);
-			$span.textContent = title;
-			$li.appendChild($span);
+			$li.innerHTML = `
+				<span
+					data-id=${id}
+					${id === this.state.currentDocument['id'] ? 'class="selected"' : ''}>
+					${title}
+				</span>
+				<span>...</span>
+				<span>+</span>
+			`;
 
 			if (documents.length > 0) {
-				this.drawNav($li, documents);
+				this.drawTree($li, documents);
 			}
 
 			$ul.appendChild($li);
@@ -41,7 +44,7 @@ export default function Nav({ $target, initialState, onClick }) {
 	});
 
 	this.render = () => {
-		this.drawNav($nav, this.state.allDocuments);
+		this.drawTree($nav, this.state.allDocuments);
 	};
 
 	this.render();
