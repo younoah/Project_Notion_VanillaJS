@@ -21,10 +21,48 @@ export default function Editor({ $target, initialState }) {
   this.render = () => {
     const { title, content } = this.state
     $editor.innerHTML = `
-      <input name="title" type="text" value="${title}"/>
-      <textarea name="content">${content} </textarea>
+      <input name="${EDITOR_NAMES.TITLE}" type="text" value="${title}"/>
+      <textarea name="${EDITOR_NAMES.CONTENT}">${content} </textarea>
     `
   }
 
-  this.render()
+  const init = async () => {
+    $editor.addEventListener('keyup', async (e) => {
+      const { name, value } = e.target
+      if (name) {
+        switch (name) {
+          case EDITOR_NAMES.TITLE:
+            this.state.title = value
+            // localStorage, setState
+            break
+          case EDITOR_NAMES.CONTENT:
+            this.state.content = value
+            //localStorage setSTate
+            break
+          default:
+            break
+        }
+
+        const { selectedDocumentId, title, content } = this.state
+        await requestPATCH(`/documents/${selectedDocumentId}`, {
+          title,
+          content,
+        })
+      }
+    })
+
+    const { selectedDocumentId } = this.state
+    if (selectedDocumentId) {
+      const selectedDocument = await requestGET(
+        `documents/${selectedDocumentId}`,
+      )
+
+      this.setState({
+        ...this.state,
+        selectedDocument,
+      })
+    }
+  }
+
+  init()
 }

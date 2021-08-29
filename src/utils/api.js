@@ -21,9 +21,18 @@ export const request = async (url, options = {}) => {
 export const requestGET = (url, options = {}) => {
   return request(url, options)
 }
+
 export const requestPOST = (url, body, options = {}) => {
   return request(url, {
     method: 'POST',
+    body: JSON.stringify(body),
+    ...options,
+  })
+}
+
+export const requestPATCH = (url, body, options = {}) => {
+  return request(url, {
+    method: 'PUT',
     body: JSON.stringify(body),
     ...options,
   })
