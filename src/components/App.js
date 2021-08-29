@@ -1,38 +1,46 @@
+import { requestGET } from '../utils/api.js'
 import Editor from './Editor/index.js'
 import Sidebar from './Sidebar/index.js'
 
 export default function App({ $target }) {
-  const DUMMY_DATA = [
-    {
-      id: 1, // Document id
-      title: '노션을 만들자', // Document title
-      documents: [
-        {
-          id: 2,
-          title: '블라블라',
-          documents: [
-            {
-              id: 3,
-              title: '함냐함냐',
-              documents: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: 'hello!',
-      documents: [],
-    },
-  ]
+  this.state = {
+    selectedDocumentId: null,
+    title: '',
+    content: '',
+  }
+
+  this.setState = (nextState) => {
+    this.state = nextState
+    const { selectedDocumentId, title, content } = this.state
+    editor.setState({
+      title,
+      content,
+      selectedDocumentId,
+    })
+  }
 
   new Sidebar({
     $target,
-    initialState: DUMMY_DATA,
+    initialState: [],
   })
 
-  new Editor({
+  const editor = new Editor({
     $target,
+    initialState: {
+      selectedDocumentId: this.state.selectedDocumentId,
+      title: 'Untitled',
+      content: '',
+    },
   })
+
+  const init = () => {
+    const { pathname } = location
+    const [, , selectedDocumentId] = pathname.split('/')
+
+    if (selectedDocumentId) {
+      this.setState({ selectedDocumentId })
+    }
+  }
+
+  init()
 }

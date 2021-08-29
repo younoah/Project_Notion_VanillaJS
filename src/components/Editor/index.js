@@ -1,13 +1,17 @@
-export default function Editor({ $target }) {
+import { requestGET, requestPATCH } from '../../utils/api.js'
+
+const EDITOR_NAMES = {
+  TITLE: 'title',
+  CONTENT: 'content',
+}
+
+export default function Editor({ $target, initialState }) {
   const $editor = document.createElement('div')
   $editor.className = 'Editor'
 
   $target.appendChild($editor)
 
-  this.state = {
-    title: 'Untitled',
-    content: 'nope',
-  }
+  this.state = initialState
 
   this.setState = (nextState) => {
     this.state = nextState
