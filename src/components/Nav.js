@@ -11,11 +11,14 @@ export default function Nav({ $target, initialState, onClick }) {
 	this.drawNav = (target, state) => {
 		const $ul = document.createElement('ul');
 
-		state.forEach(item => {
+		state.forEach((item, index) => {
 			const { id, title, documents } = item;
 			const $li = document.createElement('li');
 			const $span = document.createElement('span');
 
+			if (id === this.state.currentDocument['id']) {
+				$span.classList.add('selected');
+			}
 			$span.setAttribute('data-id', id);
 			$span.textContent = title;
 			$li.appendChild($span);
@@ -26,6 +29,7 @@ export default function Nav({ $target, initialState, onClick }) {
 
 			$ul.appendChild($li);
 		});
+
 		target.appendChild($ul);
 	};
 
@@ -33,11 +37,12 @@ export default function Nav({ $target, initialState, onClick }) {
 		if (e.target.tagName !== 'SPAN') return;
 
 		const { id } = e.target.dataset;
-		onClick(parseInt(id));
+		onClick.getDocument(parseInt(id));
 	});
 
 	this.render = () => {
-		this.drawNav($nav, this.state);
+		this.drawNav($nav, this.state.allDocuments);
 	};
+
 	this.render();
 }

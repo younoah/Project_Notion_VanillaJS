@@ -1,3 +1,7 @@
+#app {
+	display: flex;
+}
+
 .selected {
 	font-weight: bold;
 }
