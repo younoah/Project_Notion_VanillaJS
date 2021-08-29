@@ -20,27 +20,7 @@ export default function Navigation({ $target, initialState }) {
 
 	this.render = () => {
 		const { documentTree } = this.state;
-		$navPage.innerHTML = /* html */ `
-    <ul class="doc-ul">
-      ${documentTree
-				.map(
-					(doc) => /* html */ `
-        <li class="doc-li" id='${doc.id}'>
-          <span class='class-doc-carot' id='carot${
-						doc.id
-					}'><i class="fas fa-caret-right"></i>  </span> 
-          <span class='class-doc-title' id='title${doc.id}'>${doc.title}</span>
-          <span class="plus-button" id='plusBtn${doc.id}'>+</span>
-          <div style='display:none' class='class-sub-docs' id="sub${doc.id}">
-            ${doc.documents.length !== 0 ? openDocumentTree(doc.documents) : ""}
-          </div><!-- 하위 도큐먼츠 저장하는 공간 디폴트 display:hidden 이고 li 상태에 따라 해당 내용은 visible로 왔다갔다함. -->
-        </li>
-      `
-				)
-				.join("")}
-    </ul>
-    
-    `;
+		$navPage.innerHTML =`${openDocumentTree(documentTree)}`
     if(isInit){
       const $carots=document.querySelectorAll('.class-doc-carot')
       $carots.forEach(carot=>{
@@ -64,6 +44,8 @@ export default function Navigation({ $target, initialState }) {
     // console.log($subDocs)
     const _id=$li.id
     const $subDocs=document.querySelector(`#sub${_id}`)
+    
+
     try {
       if($carot.classList.contains('open')){
         $carot.innerHTML=`<i class="fas fa-caret-down"></i>`
