@@ -1,7 +1,7 @@
 import { requestGET, requestPOST } from '../../utils/api.js'
 
 const ADD_BUTTON_CLASS_NAME = 'Sidebar__add_button'
-export default function Sidebar({ $target, initialState }) {
+export default function Sidebar({ $target, initialState, onDocumentClick }) {
   // TODO: initialState Type cecheking, call without new Operator validator
   const $sidebar = document.createElement('div')
 
@@ -19,7 +19,9 @@ export default function Sidebar({ $target, initialState }) {
     return documents
       .map((document) => {
         const { id, title, documents } = document
-        let result = `<div class="PageBlock"> <li data-id="${id}">${title}</li>`
+        let result = `
+        <div class="PageBlock">
+        <li class="document" data-id="${id}">${title}</li>`
         if (documents?.length !== 0) {
           const child = renderDocuments(documents)
           result += child
@@ -61,18 +63,24 @@ export default function Sidebar({ $target, initialState }) {
     this.setState(documentsData)
   }
 
-  this.init = async () => {
+  const init = async () => {
     $sidebar.addEventListener('click', (e) => {
       const { className } = e.target
       if (className) {
-        if (className === ADD_BUTTON_CLASS_NAME) {
-          onAddRootDocument()
+        switch (className) {
+          case ADD_BUTTON_CLASS_NAME:
+            onAddRootDocument()
+            break
+          case 'document':
+            const { id } = e.target.dataset
+            onDocumentClick(parseInt(id))
+            break
         }
       }
     })
 
-    fetchDoucmentsData()
+    await fetchDoucmentsData()
   }
 
-  this.init()
+  init()
 }

@@ -22,6 +22,17 @@ export default function App({ $target }) {
   new Sidebar({
     $target,
     initialState: [],
+    onDocumentClick: async (selectedDocumentId) => {
+      const selectedDocument = await requestGET(
+        `/documents/${selectedDocumentId}`,
+      )
+
+      this.setState({
+        selectedDocumentId,
+        title: selectedDocument.title,
+        content: selectedDocument.content,
+      })
+    },
   })
 
   const editor = new Editor({
