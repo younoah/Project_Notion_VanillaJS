@@ -1,7 +1,17 @@
 import { requestGET, requestPOST } from '../../utils/api.js'
 
-const ADD_BUTTON_CLASS_NAME = 'Sidebar__add_button'
-export default function Sidebar({ $target, initialState, onDocumentClick }) {
+const SIDEBAR_CLASSES = {
+  DOCUMENT: 'Sidebar__Document',
+  ROOT_DOCUMENT_ADD_BUTTON: 'Sidebar__RootAddButton',
+  CHILD_DOCUMENT_ADD_BUTTON: 'Sidebar__ChildAddButton',
+}
+
+export default function Sidebar({
+  $target,
+  initialState,
+  onDocumentClick,
+  onAddDocument,
+}) {
   // TODO: initialState Type cecheking, call without new Operator validator
   const $sidebar = document.createElement('div')
 
@@ -21,7 +31,11 @@ export default function Sidebar({ $target, initialState, onDocumentClick }) {
         const { id, title, documents } = document
         let result = `
         <div class="PageBlock">
-        <li class="document" data-id="${id}">${title}</li>`
+          <li class="${SIDEBAR_CLASSES.DOCUMENT}" data-id="${id}">
+            ${title}
+            <button type="button" class="${SIDEBAR_CLASSES.DOCUMENT_REMOVE_BUTTON}"> 삭제 </button>
+            <button type="button" class="${SIDEBAR_CLASSES.CHILD_DOCUMENT_ADD_BUTTON}"> 하위 도큐먼트 추가 </button>
+          </li>`
         if (documents?.length !== 0) {
           const child = renderDocuments(documents)
           result += child
@@ -34,31 +48,36 @@ export default function Sidebar({ $target, initialState, onDocumentClick }) {
 
   this.render = () => {
     $sidebar.innerHTML = `
-      <button class="${ADD_BUTTON_CLASS_NAME}" type="button">루트 도큐먼트 추가</button>
+      <button class="${SIDEBAR_CLASSES.ROOT_DOCUMENT_ADD_BUTTON}" type="button">
+        루트 도큐먼트 추가
+      </button>
       ${renderDocuments(this.state)}
     `
   }
 
   const onAddRootDocument = async () => {
-    history.pushState(null, null, '/documents/new')
-
-    const title = 'Untitled'
-    // 일단 낙관적으로 업데이트하고
-    const nextState = [...this.state, { id: 'new', title, documents: [] }]
-    this.setState(nextState)
-
-    // 사용자가 아무것도 안하면 그냥 안해주고 싶긴한데.. 일단 생성해봅시다..
-    const createdDocument = await requestPOST('/documents', {
-      title,
+    const document = {
+      title: 'Untitled',
       parent: null,
-    })
+    }
 
-    console.log(createdDocument)
+    onAddDocument(document)
 
-    await fetchDoucmentsData()
+    await fetchDocumentsData()
   }
 
-  const fetchDoucmentsData = async () => {
+  const onAddChildDocument = async (parent) => {
+    const document = {
+      title: 'Untitled',
+      parent: parent,
+    }
+
+    onAddDocument(document)
+
+    await fetchDocumentsData()
+  }
+
+  const fetchDocumentsData = async () => {
     const documentsData = await requestGET('/documents')
     this.setState(documentsData)
   }
@@ -68,18 +87,27 @@ export default function Sidebar({ $target, initialState, onDocumentClick }) {
       const { className } = e.target
       if (className) {
         switch (className) {
-          case ADD_BUTTON_CLASS_NAME:
-            onAddRootDocument()
-            break
-          case 'document':
+          case SIDEBAR_CLASSES.DOCUMENT:
             const { id } = e.target.dataset
             onDocumentClick(parseInt(id))
+            break
+
+          case SIDEBAR_CLASSES.ROOT_DOCUMENT_ADD_BUTTON:
+            onAddRootDocument()
+            break
+
+          case SIDEBAR_CLASSES.CHILD_DOCUMENT_ADD_BUTTON:
+            const $li = e.target.closest(`.${SIDEBAR_CLASSES.DOCUMENT}`)
+            if ($li) {
+              const { id } = $li.dataset
+              onAddChildDocument(id)
+            }
             break
         }
       }
     })
 
-    await fetchDoucmentsData()
+    await fetchDocumentsData()
   }
 
   init()

@@ -1,4 +1,4 @@
-import { requestGET } from '../utils/api.js'
+import { requestGET, requestPOST } from '../utils/api.js'
 import Editor from './Editor/index.js'
 import Sidebar from './Sidebar/index.js'
 
@@ -31,6 +31,18 @@ export default function App({ $target }) {
         selectedDocumentId,
         title: selectedDocument.title,
         content: selectedDocument.content,
+      })
+    },
+    onAddDocument: async (document) => {
+      history.pushState(null, null, '/documents/new')
+
+      const createdDocument = await requestPOST('/documents', document)
+
+      history.replaceState(null, null, `/documents/${createdDocument.id}`)
+
+      this.setState({
+        ...this.state,
+        selectedDocumentId: createdDocument.id,
       })
     },
   })
