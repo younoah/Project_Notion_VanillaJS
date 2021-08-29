@@ -1,5 +1,17 @@
-import App from "./App.js";
+import App from './App.js';
+import { getDocuments } from './api/notion.js';
 
-const $target = document.querySelector("#app");
+const $target = document.querySelector('#app');
 
-new App($target);
+async function init() {
+	const allDocuments = (await getDocuments()) || [];
+	const currentDocument = (await getDocuments(allDocuments[0]['id'])) || [];
+
+	const initialState = {
+		allDocuments,
+		currentDocument,
+	};
+
+	new App($target, initialState);
+}
+init();
