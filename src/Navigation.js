@@ -1,4 +1,4 @@
-export default function Navigation({ $target, initialState }) {
+export default function Navigation({ $target, initialState,onClickTitle,onClickPlus }) {
 	/**
 	 * initialState={
 	 *    documentTree:[]
@@ -32,6 +32,10 @@ export default function Navigation({ $target, initialState }) {
       })
       isInit=false
     }
+    const $btnAddPage=document.createElement('button')
+    $btnAddPage.setAttribute('class','add-page')
+    $btnAddPage.innerText="페이지 추가"
+    $navPage.appendChild($btnAddPage)
   }
 	this.render();
 
@@ -39,14 +43,15 @@ export default function Navigation({ $target, initialState }) {
     const $li=e.target.closest(".doc-li")
 		const $carot = e.target.closest(".class-doc-carot");
 		const $title = e.target.closest(".class-doc-title");
-		const $plusButton = e.target.closest(".plus-button");
+		const $btnPlus = e.target.closest(".plus-button");
     // const $subDocs=e.target.closest('.class-sub-docs')
     // console.log($subDocs)
-    const _id=$li.id
-    const $subDocs=document.querySelector(`#sub${_id}`)
     
-
-    try {
+    const $btnAddPage=e.target.closest('.add-page')
+    
+    if($carot){
+      const _id=$li.id
+      const $subDocs=document.querySelector(`#sub${_id}`)
       if($carot.classList.contains('open')){
         $carot.innerHTML=`<i class="fas fa-caret-down"></i>`
         $subDocs.style.display='block'
@@ -55,9 +60,21 @@ export default function Navigation({ $target, initialState }) {
         $subDocs.style.display='none'
 
       }
-    } catch (error) {
-      // 토글버튼 외 다른 버튼 누르면 classList 확인할 수 없다해서 try-catch 처리
+    }else if($title){
+      const _id=$li.id
+      onClickTitle($title,_id)
+    }else if($btnPlus){
+      onClickPlus($btnPlus)
+    }else if($btnAddPage){
+      console.log("add page btn clicked")
+      // TODO: router 통해 주소 라우팅 하기
+      // editPage 새로 구성하기
+      // api에 title, parent:null 해서 보내기
+      // localStorage 설정..
+    }else{
+      console.log("빈 공간 클릭")//추후 걍 아무것도 안하게 처리하기
     }
+    
     
 		// console.log($carot);
 		// console.log($title);
@@ -94,7 +111,3 @@ function openDocumentTree(documents) {
   
   `;
 }
-/**
- * li.parent-doc 잡을 때 closest 써야 한다.
- *
- */
