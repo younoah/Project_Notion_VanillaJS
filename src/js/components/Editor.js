@@ -1,6 +1,7 @@
 'use strict';
 
 import { $ } from '../utils/dom.js';
+import { parseMd } from '../utils/parseMd.js';
 import {
   mainPageTemplate,
   editorTemplate,
